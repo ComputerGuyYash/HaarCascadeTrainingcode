@@ -116,35 +116,22 @@ def merge_vec_files(vec_directory, output_vec_file):
 	prev_image_size = 0
 	try:
 		with open(files[0], 'rb') as vecfile:
-			content = vecfile.read()
+			content= vecfile.read()
 			val = struct.unpack('<iihh', content[:12])
 			prev_image_size = val[1]
 	except IOError as e:
 		print('An IO error occured while processing the file: {0}'.format(f))
 		exception_response(e)
-	for f in files:
-	    try:
-	        with open(f, 'rb') as vecfile:
-	            content = vecfile.read()
-	            val = struct.unpack('<iihh', content[:12])
-	            num_images = val[0]
-	            image_size = val[1]
-	            if image_size != prev_image_size:
-	                err_msg = """The image sizes in the .vec files differ. These values must be the same. \n The image size of file {0}: {1}\n 
-	                    The image size of previous files: {0}""".format(f, image_size, prev_image_size)
-	                sys.exit(err_msg)
 
-	            total_num_images += num_images
-	    except IOError as e:
-	        print('An IO error occured while processing the file: {0}'.format(f))
-	        exception_response(e)
 
 	# Get the total number of images
 	total_num_images = 0
 	for f in files:
 		try:
 			with open(f, 'rb') as vecfile:	
-				content = ''.join(str(line) for line in vecfile.readlines())
+				# content = ''.join(str(line) for line in vecfile.r())
+				# content = bytes(content,"utf-8")
+				content= vecfile.read()
 				val = struct.unpack('<iihh', content[:12])
 				num_images = val[0]
 				image_size = val[1]
@@ -168,7 +155,8 @@ def merge_vec_files(vec_directory, output_vec_file):
 
 			for f in files:
 				with open(f, 'rb') as vecfile:
-					content = ''.join(str(line) for line in vecfile.readlines())
+					# content = ''.join(str(line) for line in vecfile.readlines())
+					content= vecfile.read()
 					data = content[12:]
 					outputfile.write(data)
 	except Exception as e:
